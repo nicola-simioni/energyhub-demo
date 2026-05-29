@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\SiteResource;
 use App\Models\Site;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 
 class SiteController extends Controller
@@ -16,7 +17,9 @@ class SiteController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $sites = $user->sites;
+        $sites = Cache::remember('user_sites_' . $user->id, 3600, function () use ($user) {
+            return $user->sites;
+        });
 
         // return response()->json(SiteResource::collection($sites));
         return SiteResource::collection($sites);
@@ -44,7 +47,9 @@ class SiteController extends Controller
             'name' => $request->name,
             'location' => $request->location,
             'user_id' => $request->user()->id
-        ]);        
+        ]);
+        
+        Cache::forget('user_sites_' . $request->user()->id);
 
         Log::info('Site created', [
             'site_id' => $site->id,
@@ -90,6 +95,8 @@ class SiteController extends Controller
 
         $site->update($request->only(['name', 'location']));
         
+        Cache::forget('user_sites_' . $request->user()->id);
+
         return new SiteResource($site);    
     }
 
@@ -103,6 +110,9 @@ class SiteController extends Controller
         }    
 
         $site->delete();
+
+        Cache::forget('user_sites_' . $request->user()->id);
+
         return response()->noContent();
     }
 }
