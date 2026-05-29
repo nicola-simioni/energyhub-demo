@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Resources\SiteResource;
 use App\Models\Site;
+use Illuminate\Support\Facades\Log;
 
 
 class SiteController extends Controller
@@ -42,6 +43,11 @@ class SiteController extends Controller
         $site = Site::create([
             'name' => $request->name,
             'location' => $request->location,
+            'user_id' => $request->user()->id
+        ]);        
+
+        Log::info('Site created', [
+            'site_id' => $site->id,
             'user_id' => $request->user()->id
         ]);
         
