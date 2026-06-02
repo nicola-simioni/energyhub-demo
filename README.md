@@ -7,6 +7,7 @@ A demo energy monitoring platform built with Laravel 13, developed as a technica
 - **PostgreSQL** — database
 - **Sanctum** — API token authentication
 - **Filament 3** — admin panel
+- **Livewire** — reactive components
 
 ## Features
 - REST API with Sanctum token authentication
@@ -15,6 +16,7 @@ A demo energy monitoring platform built with Laravel 13, developed as a technica
 - Eloquent relationships (User → Sites → Readings)
 - JSON Resources for API responses
 - Filament admin panel with custom actions and relation managers
+- Livewire search component with real-time filtering
 
 ## Setup
 ```bash
